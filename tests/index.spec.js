@@ -19,25 +19,12 @@ test('Stack Overflow', async ({ page }) => {
   const applyButton = await page.locator('button[data-se-uql-target="applyButton"]');
   await applyButton.click();
 
-  const currentUrl = page.url();
-  // Add &pagesize=50 to the URL and reload
-  const first50 = currentUrl.includes('?pagesize=50') ? currentUrl : `${currentUrl}?pagesize=50`;
-  await page.goto(first50);
+// Create an array to store the extracted data
+const questionData = [];
 
-  // Extract the question text
+  // Extract the question title
   const titleElement = await page.locator('.s-post-summary--content-title a').first();
   const title = await titleElement.innerText();
-  console.log("Title of the question:", title);
-
-  // Extract the vote count
-  const voteCountElement = await page.locator('.s-post-summary--stats-item-number').first();
-  const voteCount = await voteCountElement.innerText();
-  console.log(voteCount);
-
-  // Extract the timestamp
-  const timestampElement = await page.locator('.s-user-card--time span').first();
-  const timestamp = await timestampElement.innerText();
-  console.log(timestamp);
 
    // Extract tags
    const tagListContainer = await page.locator('.js-post-tag-list-wrapper').first();
@@ -46,9 +33,30 @@ test('Stack Overflow', async ({ page }) => {
    const tags = [];
    for (const item of await listItems.elementHandles()) {
      const tagText = await item.textContent();
-     tags.push(tagText.trim()); // Remove leading/trailing whitespace
+     tags.push(tagText.trim()); 
    }
-   console.log(tags);
+   // Vetify that tags contain javascript or else test fails
+   expect(tags).toContain('javascript');
+  
+
+  // Extract the vote count
+  const voteCountElement = await page.locator('.s-post-summary--stats-item-number').first();
+  const voteCount = await voteCountElement.innerText();
+
+
+  // Extract the timestamp
+  const timestampElement = await page.locator('.s-user-card--time span').first();
+  const timestamp = await timestampElement.innerText();
+  
+
+  // Add the extracted data to the array
+  questionData.push({
+  title,
+  tags,
+  voteCount,
+  timestamp
+});
  
+console.log("Question data:", questionData);
 });
 
