@@ -22,6 +22,7 @@ test('Stack Overflow', async ({ page }) => {
   const applyButton = await page.locator('button[data-se-uql-target="applyButton"]');
   await applyButton.click();
 
+  // Display questions 50 at a time
   const paginationButton = await page.locator('a[title="Show 50 items per page"]')
   await paginationButton.click()
 
@@ -76,6 +77,7 @@ test('Stack Overflow', async ({ page }) => {
       // console.log(questionData);
   }
     
+    // Navigate to next set of 50 questions
     const currentUrl = page.url();
     const newUrl = currentUrl + '&page=' + pagination;
     await page.goto(newUrl);
