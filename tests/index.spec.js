@@ -74,7 +74,7 @@ test('Stack Overflow', async ({ page }) => {
       timestamp
       });
 
-      // console.log(questionData);
+    console.log(questionData);
   }
     
     // Navigate to next set of 50 questions
@@ -85,7 +85,7 @@ test('Stack Overflow', async ({ page }) => {
   
   } while (pagination <= 3);
 
-    // console.log(questionData.length);
+    console.log("Total number of questions parsed : " + questionData.length);
 
 });
 
