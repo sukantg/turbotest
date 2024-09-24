@@ -2,6 +2,7 @@ const { test, expect } = require('@playwright/test');
 const moment = require('moment');
 let pagination = 2, currentTime = 0, previousTime = 0
 
+
 test('Stack Overflow', async ({ page }) => {
   // Navigate to Stack Overflow's questions page and wait for page to load
   await page.goto('https://stackoverflow.com/questions', { waitUntil: 'load' });
@@ -56,12 +57,13 @@ test('Stack Overflow', async ({ page }) => {
       // Extract the timestamp
       const timestampElement = await page.locator('.s-user-card--time span >> nth=' + i);
       const timestamp = await timestampElement.innerText();
-      // const momentObj = moment(timestamp);
-      // console.log(momentObj);
-      // currentTime = timestamp;
-      // // Verify that timestamp of the previous question is earlier than current one, or else test fails
-      // expect(previousTime).toBeLessThan(currentTime);
-      // previousTime = currentTime;
+    
+      // Convert relative timestamp to milliseconds using moment.js
+      const timestampMilliseconds = moment.duration(timestamp).asMilliseconds();
+      currentTime = timestampMilliseconds;
+      // Verify that timestamp of the previous time is never higher than current, or else test fails
+      expect(previousTime).not.toBeGreaterThan(currentTime);
+      previousTime = currentTime;
 
       // Add the extracted data to the array of objects
       questionData.push({
@@ -71,7 +73,7 @@ test('Stack Overflow', async ({ page }) => {
       timestamp
       });
 
-    // console.log(questionData);
+      // console.log(questionData);
   }
     
     const currentUrl = page.url();
@@ -81,7 +83,7 @@ test('Stack Overflow', async ({ page }) => {
   
   } while (pagination <= 3);
 
-  console.log(questionData.length);
+    // console.log(questionData.length);
 
 });
 
